@@ -3,207 +3,312 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master Maps Solution - Spesialis Google Maps</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>Master Maps Solution</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:Arial,sans-serif;background:#fef3c7;color:#333;scroll-behavior:smooth;overflow-x:hidden;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+  text-align:center;
+}
 
-/* Particle background Hero */
-#particles-js{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;}
+body{
+  background: linear-gradient(270deg,#ffd54f,#0d47a1,#ffd54f);
+  background-size:600% 600%;
+  animation:bg 10s infinite;
+  color:white;
+}
 
-/* Header */
-header{display:flex;flex-direction:column;align-items:center;padding:20px;background:#ffd54f;box-shadow:0 4px 6px rgba(0,0,0,0.1);position:sticky;top:0;z-index:1000;}
-header img{height:80px;margin-bottom:10px;transition:0.3s;}
-header img:hover{transform:scale(1.1) rotate(-5deg);}
-header h1{color:#1e3a8a;margin-bottom:5px;text-align:center;}
-header p{color:#333;font-size:16px;text-align:center;margin-bottom:10px;}
-nav{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
-nav a{text-decoration:none;color:#1e3a8a;font-weight:bold;transition:0.3s;}
-nav a:hover{color:#ffb300;}
+@keyframes bg{
+  0%{background-position:0%}
+  50%{background-position:100%}
+  100%{background-position:0%}
+}
 
-/* Hero */
-.hero{text-align:center;padding:120px 20px;position:relative;overflow:hidden;color:#fff;text-shadow:0 2px 15px rgba(0,0,0,0.5);z-index:1;}
-.hero h2{font-size:36px;margin-bottom:15px;animation:fadeInText 1.5s ease-in;}
-.hero p{font-size:18px;margin-bottom:25px;}
-@keyframes fadeInText{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.hero .cta{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
-.hero .cta a{text-decoration:none;padding:15px 30px;background:#fbc02d;color:#fff;border-radius:10px;font-weight:bold;box-shadow:0 6px 15px rgba(0,0,0,0.3);transition:0.4s;}
-.hero .cta a:hover{background:#ffb300;transform:scale(1.15) rotate(-2deg);text-shadow:0 0 12px #fff;}
+/* PROMO */
+.promo{
+  background:gold;
+  color:black;
+  padding:12px;
+  font-weight:bold;
+}
 
-/* Services */
-.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;padding:60px 20px;max-width:1200px;margin:auto;background:rgba(255,255,255,0.9);border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,0.15);}
-.service-card{background:#fff3e0;border-radius:12px;padding:25px;text-align:center;transition:0.5s;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
-.service-card i{font-size:45px;color:#1e3a8a;margin-bottom:10px;transition:1s;animation:iconBounce 3s infinite;}
-@keyframes iconBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-.service-card:hover i{color:#ffb300;transform:scale(1.3) rotate(15deg);}
-.service-card h3{color:#1e3a8a;margin-bottom:10px;}
-.service-card p{font-size:14px;margin-bottom:15px;}
-.service-card a{display:inline-block;padding:12px 25px;background:#fbc02d;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;transition:0.4s;box-shadow:0 6px 15px rgba(0,0,0,0.2);}
-.service-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 10px 25px rgba(0,0,0,0.35);}
-.service-card a:hover{transform:scale(1.1);background:#ffb300;text-shadow:0 0 8px #fff;}
+/* LOGO ULTRA VIP */
+.logo-wrapper{
+  position:relative;
+  display:inline-block;
+  margin:20px 0;
+}
 
-/* Shopee */
-.shopee{padding:60px 20px;text-align:center;margin:40px 0;background:rgba(255,243,224,0.95);border-radius:15px;box-shadow:0 6px 20px rgba(0,0,0,0.1);}
-.shopee i{font-size:60px;color:#ff5722;margin-bottom:15px;transition:1s;animation:iconRotate 4s linear infinite;}
-@keyframes iconRotate{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-.shopee a{text-decoration:none;padding:15px 30px;background:#ff5722;color:#fff;border-radius:10px;font-weight:bold;box-shadow:0 6px 15px rgba(0,0,0,0.3);transition:0.4s;}
-.shopee a:hover{background:#e64a19;transform:scale(1.15);text-shadow:0 0 10px #fff;}
+.logo-bg{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:140px;
+  height:140px;
+  background:radial-gradient(circle, gold, transparent 70%);
+  filter:blur(25px);
+  z-index:0;
+  animation:pulse 3s infinite;
+}
 
-/* Testimoni */
-.testimonial-section{background:#e3f2fd;padding:60px 20px;text-align:center;position:relative;overflow:hidden;border-radius:15px;}
-.testimonial-carousel{position:relative;max-width:900px;margin:auto;overflow:hidden;border-radius:12px;}
-.carousel-inner{display:flex;transition:0.6s all ease-in-out;}
-.testimonial-card{flex:0 0 100%;background:#fff;margin:0 10px;padding:25px;border-radius:12px;box-shadow:0 6px 15px rgba(0,0,0,0.15);text-align:left;transform:scale(1);transition:0.5s;}
-.testimonial-card:hover{transform:scale(1.02);box-shadow:0 10px 25px rgba(0,0,0,0.3);}
-.testimonial-card h4{color:#1e3a8a;margin-bottom:5px;}
-.testimonial-card p{font-size:14px;margin-bottom:10px;}
-.testimonial-card span{font-size:12px;color:#555;}
+.logo{
+  position:relative;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  border:4px solid gold;
+  z-index:1;
+  animation:glow 2s infinite alternate;
+  transition:0.3s;
+}
 
-/* Carousel Buttons */
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;padding:10px 15px;cursor:pointer;border-radius:50%;transition:0.3s;}
-.carousel-btn:hover{background:rgba(0,0,0,0.7);}
-#prevBtn{left:10px;}
-#nextBtn{right:10px;}
+.logo:hover{
+  transform:scale(1.08);
+}
 
-/* Upload Testimoni */
-.testimonial-form{display:flex;flex-direction:column;gap:15px;max-width:450px;margin:50px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 12px rgba(0,0,0,0.1);}
-.testimonial-form input,.testimonial-form textarea,.testimonial-form button{padding:10px;border-radius:5px;border:1px solid #ccc;font-size:14px;}
-.testimonial-form button{background:#1e3a8a;color:#fff;border:none;font-weight:bold;cursor:pointer;transition:0.3s;}
-.testimonial-form button:hover{background:#16346b;}
-.testimonial-preview{margin-top:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:15px;}
-.testimonial-preview img{width:100px;height:100px;object-fit:cover;border-radius:10px;border:2px solid #1e3a8a;}
+@keyframes glow{
+  from{ box-shadow:0 0 10px gold; }
+  to{ box-shadow:0 0 30px gold; }
+}
 
-/* Footer */
-footer{text-align:center;padding:20px;background:#ffd54f;color:#1e3a8a;font-weight:bold;margin-top:40px;}
+@keyframes pulse{
+  0%{opacity:0.6; transform:translate(-50%,-50%) scale(1);}
+  50%{opacity:1; transform:translate(-50%,-50%) scale(1.15);}
+  100%{opacity:0.6; transform:translate(-50%,-50%) scale(1);}
+}
+
+/* HERO */
+.hero{
+  padding:50px 20px;
+}
+
+.btn{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:gold;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* SEARCH */
+.search input{
+  padding:10px;
+  width:80%;
+  border-radius:20px;
+  border:none;
+  margin:20px 0;
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  border-radius:20px;
+  margin:10px;
+  display:inline-block;
+  width:250px;
+}
+
+/* TESTIMONI */
+.slider{
+  max-width:320px;
+  margin:20px auto;
+}
+
+.slide{
+  display:none;
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:10px;
+}
+
+.slide.active{
+  display:block;
+}
+
+.slide img{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+/* FORM */
+.form input,.form textarea{
+  width:80%;
+  margin:10px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+}
+
+/* FLOAT */
+.wa{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  padding:15px;
+  border-radius:50%;
+  font-size:20px;
+}
+
+.top{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:black;
+  padding:10px;
+  border-radius:50%;
+}
 </style>
 </head>
+
 <body>
 
-<div id="particles-js"></div>
+<div class="promo">🔥 Jasa Google Maps Mulai dari 100K 🚀</div>
 
 <header>
-<img src="<a href="https://ibb.co.com/VcWjTnWz"><img src="https://i.ibb.co.com/zThnZ9hB/file-00000000d93c720ba6b9c09497eaaf2a.png" alt="file-00000000d93c720ba6b9c09497eaaf2a" border="0"></a>
+  <div class="logo-wrapper">
+    <div class="logo-bg"></div>
+    <img src="https://i.ibb.co.com/gbdCT50d/IMG-20260321-064045.png" class="logo">
+  </div>
 
-<h1>Master Maps Solution</h1>
-<p>Spesialis pembuatan, perbaikan, & optimasi Google Maps</p>
-<nav>
-<a href="#services">Layanan</a>
-<a href="#shopee">Shopee</a>
-<a href="#testimonial">Testimoni</a>
-</nav>
+  <h1>Master Maps Solution</h1>
+  <p>Spesialis pembuatan, perbaikan, & optimasi Google Maps</p>
 </header>
 
-<section class="hero">
-<h2>Tingkatkan Visibilitas Bisnis Anda di Google Maps & Shopee</h2>
-<p>Spesialis pembuatan, perbaikan, & optimasi Google Maps</p>
-<div class="cta">
-<a href="https://wa.me/6285100886036?text=Saya%20ingin%20menggunakan%20jasa%20Google%20Maps">Pesan Sekarang</a>
-<a href="https://id.shp.ee/Vn43PQPq" target="_blank">Beli di Shopee</a>
+<div class="hero">
+  <h2>Jasa Google Maps Profesional 🔥</h2>
+  <button class="btn" onclick="wa()">Pesan Sekarang</button>
 </div>
-</section>
 
-<section class="services" id="services">
-<!-- Service Cards -->
-<div class="service-card">
-<i class="fa-solid fa-map-location-dot"></i>
-<h3>Jasa Google Maps</h3>
-<p>Meningkatkan visibilitas lokasi bisnis Anda di Google Maps.</p>
-<a href="https://wa.me/6285100886036?text=Saya%20ingin%20menggunakan%20jasa%20Google%20Maps">Pesan Sekarang</a>
+<div class="search">
+  <input type="text" id="search" placeholder="Cari layanan..." onkeyup="cari()">
 </div>
-<div class="service-card">
-<i class="fa-solid fa-user-tie"></i>
-<h3>Google Profil / My Business</h3>
-<p>Optimasi profil bisnis Anda agar mudah ditemukan di Google.</p>
-<a href="https://wa.me/6285100886036?text=Saya%20ingin%20menggunakan%20Google%20Profil">Pesan Sekarang</a>
-</div>
-<div class="service-card">
-<i class="fa-solid fa-building"></i>
-<h3>Google My Bisnis / GMB</h3>
-<p>Paket lengkap pembuatan dan optimasi GMB untuk bisnis Anda.</p>
-<a href="https://wa.me/6285100886036?text=Saya%20ingin%20menggunakan%20jasa%20GMB">Pesan Sekarang</a>
-</div>
-</section>
 
-<section class="shopee" id="shopee">
-<i class="fa-brands fa-shopify"></i>
-<h3>Belanja Layanan / Produk via Shopee</h3>
-<a href="https://id.shp.ee/Vn43PQPq" target="_blank">Beli Sekarang di Shopee</a>
-</section>
+<div>
+  <div class="card">📍 Google Maps</div>
+  <div class="card">🏢 Google Profil</div>
+  <div class="card">🌐 Google My Business</div>
+</div>
 
-<section class="testimonial-section" id="testimonial">
+<section>
 <h2>Testimoni Pelanggan</h2>
-<div class="testimonial-carousel">
-<div class="carousel-inner">
-<div class="testimonial-card">
-<h4>T*****i</h4>
-<p>Admin sangat cepat merespon dan sabar dengan segala pertanyaan serta request pelanggan, proses sangat cepat dan akurat, sangat puas dan tidak salah pilih untuk membuat maps toko, sangat membantu dan ramah.</p>
-<span>PEMBUATAN GMAP | 21-08-2025</span>
-</div>
-<div class="testimonial-card">
-<h4>A*****t</h4>
-<p>Pesan karangan bunga untuk berbagai acara, hubungi Aji Florist. Proses cepat, hasil rapi & memuaskan. Bisa request nuansa warna (Png/jpg).</p>
-<span>PEMBUATAN GMAP</span>
-</div>
-<div class="testimonial-card">
-<h4>aksen.os</h4>
-<p>Desain: bagus. Kemudahan: proses cepat & profesional.</p>
-<span>PEMBUATAN GMAP | 22-11-2025</span>
-</div>
-<div class="testimonial-card">
-<h4>J*****h</h4>
-<p>Responsif bgt. Cepet kelar ga nyampe 2 hari.</p>
-<span>PEMBUATAN GMAP | 10-12-2025</span>
-</div>
-<div class="testimonial-card">
-<h4>blacklabelmerch</h4>
-<p>Cepat di proses, rekomendasi.</p>
-<span>PEMBUATAN GMAP | 08-11-2025</span>
-</div>
-<div class="testimonial-card">
-<h4>asepsyaipuddin</h4>
-<p>Pelayanan cepat dan langsung tayang, recomended.</p>
-<span>PEMBUATAN GMAP</span>
-</div>
-</div>
-<button class="carousel-btn" id="prevBtn">&#10094;</button>
-<button class="carousel-btn" id="nextBtn">&#10095;</button>
+
+<div class="slider" id="slider">
+
+<div class="slide active">
+⭐⭐⭐⭐⭐<br><b>T*****i</b><br>
+Admin sangat cepat merespon dan sabar dengan segala pertanyaan serta request pelanggan, proses sangat cepat dan akurat, sangat puas dan tidak salah pilih.<br><br>
+<small>PEMBUATAN GMAP | 21-08-2025</small>
 </div>
 
-<h2>Upload Testimoni Anda</h2>
-<form class="testimonial-form">
-<input type="text" name="name" placeholder="Nama Anda" required>
-<textarea name="message" placeholder="Tulis testimoni Anda" rows="4" required></textarea>
-<input type="file" name="photo" accept="image/*" required id="photoUpload">
-<button type="button" onclick="addTestimonial()">Kirim Testimoni</button>
-</form>
-<div class="testimonial-preview" id="previewContainer"></div>
+<div class="slide">
+⭐⭐⭐⭐⭐<br><b>A*****t</b><br>
+Pesan karangan bunga berbagai acara, proses cepat & memuaskan.<br><br>
+<small>PEMBUATAN GMAP</small>
+</div>
+
+<div class="slide">
+⭐⭐⭐⭐⭐<br><b>aksen.os</b><br>
+Desain bagus, proses cepat & profesional.<br><br>
+<small>22-11-2025</small>
+</div>
+
+<div class="slide">
+⭐⭐⭐⭐⭐<br><b>J*****h</b><br>
+Responsif banget, cepat selesai.<br><br>
+<small>10-12-2025</small>
+</div>
+
+<div class="slide">
+⭐⭐⭐⭐⭐<br><b>blacklabelmerch</b><br>
+Cepat diproses, rekomendasi.<br><br>
+<small>08-11-2025</small>
+</div>
+
+<div class="slide">
+⭐⭐⭐⭐⭐<br><b>asepsyaipuddin</b><br>
+Pelayanan cepat dan langsung tayang.<br><br>
+<small>PEMBUATAN GMAP</small>
+</div>
+
+</div>
+
+<h3>Tambah Testimoni</h3>
+
+<div class="form">
+<input type="text" id="nama" placeholder="Nama">
+<textarea id="pesan" placeholder="Tulis testimoni"></textarea>
+<input type="file" id="foto">
+<br>
+<button class="btn" onclick="upload()">Kirim</button>
+</div>
+
 </section>
 
-<footer>
-&copy; 2026 Master Maps Solution - Spesialis Google Maps
-</footer>
+<div class="wa" onclick="wa()">💬</div>
+<div class="top" onclick="topScroll()">↑</div>
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-// Particles JS
-particlesJS('particles-js',{
-"particles":{"number":{"value":80,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffb300"},"shape":{"type":"circle"},"opacity":{"value":0.5,"random":true},"size":{"value":3,"random":true},"line_linked":{"enable":true,"distance":150,"color":"#ffb300","opacity":0.3,"width":1},"move":{"enable":true,"speed":2,"direction":"none","random":true,"out_mode":"out"}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"}}}
-});
+function wa(){
+  window.open("https://wa.me/6285100886036?text=Halo saya mau pesan jasa Google Maps");
+}
 
-// Fade-in scroll
-const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.style.opacity=1;entry.target.style.transform='translateY(0)';}})},{threshold:0.2});
-document.querySelectorAll('.hero,.shopee,.testimonial-section,.services').forEach(section=>observer.observe(section));
+function topScroll(){
+  window.scrollTo({top:0,behavior:"smooth"});
+}
 
-// Carousel testimoni
-let currentIndex=0;const carouselInner=document.querySelector('.carousel-inner');const totalSlides=carouselInner.children.length;
-document.getElementById('nextBtn').addEventListener('click',()=>{currentIndex=(currentIndex+1)%totalSlides;updateCarousel();});
-document.getElementById('prevBtn').addEventListener('click',()=>{currentIndex=(currentIndex-1+totalSlides)%totalSlides;updateCarousel();});
-function updateCarousel(){carouselInner.style.transform=`translateX(-${currentIndex*100}%)`; }
-setInterval(()=>{currentIndex=(currentIndex+1)%totalSlides;updateCarousel();},5000);
+function cari(){
+  let input=document.getElementById("search").value.toLowerCase();
+  let card=document.querySelectorAll(".card");
+  card.forEach(c=>{
+    c.style.display=c.innerText.toLowerCase().includes(input)?"block":"none";
+  });
+}
 
-// Upload testimoni preview
-function addTestimonial(){const photoInput=document.getElementById('photoUpload');if(photoInput.files&&photoInput.files[0]){const preview=document.createElement('img');preview.src=URL.createObjectURL(photoInput.files[0]);document.getElementById('previewContainer').appendChild(preview);photoInput.value='';}}
+let i=0;
+let slides=document.querySelectorAll(".slide");
+setInterval(()=>{
+  slides.forEach(s=>s.classList.remove("active"));
+  slides[i].classList.add("active");
+  i=(i+1)%slides.length;
+},3000);
+
+function upload(){
+  let nama=document.getElementById("nama").value;
+  let pesan=document.getElementById("pesan").value;
+  let file=document.getElementById("foto").files[0];
+
+  let div=document.createElement("div");
+  div.className="slide";
+
+  let isi="⭐⭐⭐⭐⭐<br><b>"+nama+"</b><br>"+pesan;
+
+  if(file){
+    let img=document.createElement("img");
+    img.src=URL.createObjectURL(file);
+    div.innerHTML=isi;
+    div.appendChild(img);
+  }else{
+    div.innerHTML=isi;
+  }
+
+  document.getElementById("slider").appendChild(div);
+  slides=document.querySelectorAll(".slide");
+}
 </script>
+
 </body>
 </html>
