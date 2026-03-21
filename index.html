@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Klaim THR</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #eef2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* GETAR LAYAR */
+.shake {
+  animation: shake 0.3s;
+}
+@keyframes shake {
+  0% { transform: translate(2px, 2px); }
+  25% { transform: translate(-2px, -2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* NOTIF */
+.notif {
+  position: fixed;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #108ee9;
+  color: white;
+  padding: 20px 18px;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 350px;
+  transition: 0.4s;
+  line-height: 1.5;
+}
+.notif.show { top: 20px; }
+
+/* CARD */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 300px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background: #108ee9;
+  color: white;
+  font-weight: bold;
+}
+
+/* POPUP */
+.popup {
+  display: none;
+  position: fixed;
+  bottom: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  text-align: center;
+  transition: 0.4s;
+}
+.popup.show { bottom: 0; }
+
+/* UANG FULL CHAOS */
+.item {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 24px;
+  pointer-events: none;
+  animation: explode 3s ease-out forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0,0) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) rotate(1080deg) scale(1.2);
+    opacity: 0;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- NOTIF -->
+<div id="notif" class="notif">
+  <b>DANA</b><br>
+  Saldo Masuk<br>
+  Hi, Z***y baru saja kirim DANA ke kamu 1.000.000
+</div>
+
+<!-- BOX -->
+<div class="card">
+  <div style="font-size:40px;">💸</div>
+  <h2>Klaim THRmu!</h2>
+  <button onclick="start()">KLAIM SEKARANG</button>
+</div>
+
+<!-- POPUP -->
+<div id="popup" class="popup">
+  <h3>💰 Konfirmasi</h3>
+  <p>Saldo berhasil masuk ke akun Anda</p>
+  <button onclick="done()">OK</button>
+</div>
+
+<script>
+// 🔊 SUARA
+function sound() {
+  let audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+  audio.play();
+}
+
+// 📳 GETAR
+function vibrate() {
+  if (navigator.vibrate) {
+    navigator.vibrate([200,100,200]);
+  }
+}
+
+// 💸 CHAOS UANG
+function chaos() {
+  let emojis = ["💸","💵","💶","💴","💷","🎉","✨"];
+
+  for (let i = 0; i < 300; i++) {
+    let el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+
+    let x = (Math.random() - 0.5) * 2000;
+    let y = (Math.random() - 0.5) * 2000;
+
+    el.style.setProperty("--x", x + "px");
+    el.style.setProperty("--y", y + "px");
+
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+// 🚀 START
+function start() {
+  let notif = document.getElementById("notif");
+  let popup = document.getElementById("popup");
+
+  chaos();
+
+  sound();     
+  vibrate();   
+
+  document.body.classList.add("shake");
+  setTimeout(() => document.body.classList.remove("shake"), 300);
+
+  setTimeout(() => {
+    notif.classList.add("show");
+  }, 800);
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    popup.classList.add("show");
+  }, 4000);
+}
+
+// 😈 ENDING
+function done() {
+  alert("😆 SULTAN PALSU! KENA PRANK!! 😆");
+}
+</script>
+
+</body>
+</html>
