@@ -96,6 +96,11 @@ body{
   background:gold;
   cursor:pointer;
   font-weight:bold;
+  transition:0.3s;
+}
+
+.btn:hover{
+  opacity:0.8;
 }
 
 /* SEARCH */
@@ -116,25 +121,38 @@ body{
   margin:10px;
   display:inline-block;
   width:250px;
+  transition:0.5s;
 }
 
-/* TESTIMONI */
+.card:hover{
+  transform:scale(1.05);
+}
+
+/* SLIDER TESTIMONI */
 .slider{
   max-width:320px;
   margin:20px auto;
+  position:relative;
+  min-height:140px;
 }
 
 .slide{
-  display:none;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  opacity:0;
   background:white;
   color:black;
   padding:20px;
   border-radius:15px;
   margin-bottom:10px;
+  transition:opacity 1s ease-in-out;
 }
 
 .slide.active{
-  display:block;
+  opacity:1;
+  position:relative;
 }
 
 .slide img{
@@ -152,17 +170,21 @@ body{
   border:none;
 }
 
-/* FLOAT */
-.wa{
+/* FLOAT BUTTONS */
+.wa, .shopee-float{
   position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
   padding:15px;
   border-radius:50%;
   font-size:20px;
+  cursor:pointer;
+  z-index:1000;
+  transition:0.3s;
 }
 
+.wa{ background:#25D366; bottom:20px; right:20px;}
+.shopee-float{ background:#ff5722; bottom:80px; right:20px;}
+
+/* SCROLL TOP */
 .top{
   position:fixed;
   bottom:20px;
@@ -170,6 +192,75 @@ body{
   background:black;
   padding:10px;
   border-radius:50%;
+  cursor:pointer;
+  z-index:1000;
+}
+
+/* CHAT POPUP */
+#chatBox{
+  position:fixed;
+  bottom:140px;
+  left:20px;
+  background:white;
+  color:black;
+  padding:10px;
+  border-radius:10px;
+  font-size:12px;
+  cursor:pointer;
+  z-index:1001;
+  transition:0.3s;
+}
+
+#chatPopup{
+  position:fixed;
+  bottom:180px;
+  left:20px;
+  width:220px;
+  background:#e5ddd5;
+  border-radius:15px;
+  display:none;
+  box-shadow:0 10px 20px rgba(0,0,0,0.3);
+  overflow:hidden;
+  z-index:1000;
+}
+
+.chat-header{
+  background:#075E54;
+  color:white;
+  padding:10px;
+  font-size:14px;
+}
+
+.chat-body{
+  padding:10px;
+  text-align:left;
+  max-height:200px;
+  overflow-y:auto;
+}
+
+.msg{
+  background:white;
+  padding:8px;
+  border-radius:10px;
+  margin:5px 0;
+  font-size:12px;
+  text-align:left;
+}
+
+.typing{
+  font-size:11px;
+  opacity:0.7;
+}
+
+.chat-btn{
+  background:#25D366;
+  color:white;
+  border:none;
+  width:90%;
+  padding:8px;
+  margin:10px auto;
+  border-radius:10px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -181,9 +272,8 @@ body{
 <header>
   <div class="logo-wrapper">
     <div class="logo-bg"></div>
-    <img src="https://i.ibb.co.com/gbdCT50d/IMG-20260321-064045.png" class="logo">
+    <img src="https://i.ibb.co/gbdCT50d/IMG-20260321-064045.png" class="logo">
   </div>
-
   <h1>Master Maps Solution</h1>
   <p>Spesialis pembuatan, perbaikan, & optimasi Google Maps</p>
 </header>
@@ -207,77 +297,46 @@ body{
 <h2>Testimoni Pelanggan</h2>
 
 <div class="slider" id="slider">
-
-<div class="slide active">
-⭐⭐⭐⭐⭐<br><b>T*****i</b><br>
-Admin sangat cepat merespon dan sabar dengan segala pertanyaan serta request pelanggan, proses sangat cepat dan akurat, sangat puas dan tidak salah pilih.<br><br>
-<small>PEMBUATAN GMAP | 21-08-2025</small>
-</div>
-
-<div class="slide">
-⭐⭐⭐⭐⭐<br><b>A*****t</b><br>
-Pesan karangan bunga berbagai acara, proses cepat & memuaskan.<br><br>
-<small>PEMBUATAN GMAP</small>
-</div>
-
-<div class="slide">
-⭐⭐⭐⭐⭐<br><b>aksen.os</b><br>
-Desain bagus, proses cepat & profesional.<br><br>
-<small>22-11-2025</small>
-</div>
-
-<div class="slide">
-⭐⭐⭐⭐⭐<br><b>J*****h</b><br>
-Responsif banget, cepat selesai.<br><br>
-<small>10-12-2025</small>
-</div>
-
-<div class="slide">
-⭐⭐⭐⭐⭐<br><b>blacklabelmerch</b><br>
-Cepat diproses, rekomendasi.<br><br>
-<small>08-11-2025</small>
-</div>
-
-<div class="slide">
-⭐⭐⭐⭐⭐<br><b>asepsyaipuddin</b><br>
-Pelayanan cepat dan langsung tayang.<br><br>
-<small>PEMBUATAN GMAP</small>
-</div>
-
+  <div class="slide active">⭐⭐⭐⭐⭐<br><b>T*****i</b><br>Admin sangat cepat merespon dan sabar, proses cepat & akurat, sangat puas.<br><br><small>PEMBUATAN GMAP | 21-08-2025</small></div>
+  <div class="slide">⭐⭐⭐⭐⭐<br><b>A*****t</b><br>Proses cepat & memuaskan.<br><br><small>PEMBUATAN GMAP</small></div>
+  <div class="slide">⭐⭐⭐⭐⭐<br><b>aksen.os</b><br>Desain bagus, profesional.<br><br><small>22-11-2025</small></div>
 </div>
 
 <h3>Tambah Testimoni</h3>
-
 <div class="form">
 <input type="text" id="nama" placeholder="Nama">
 <textarea id="pesan" placeholder="Tulis testimoni"></textarea>
-<input type="file" id="foto">
-<br>
+<input type="file" id="foto"><br>
 <button class="btn" onclick="upload()">Kirim</button>
 </div>
-
 </section>
 
+<!-- FLOAT & CHAT -->
 <div class="wa" onclick="wa()">💬</div>
+<div class="shopee-float" onclick="shopee()">🛒</div>
 <div class="top" onclick="topScroll()">↑</div>
 
+<div id="chatBox" onclick="toggleChat()">Chat Admin</div>
+<div id="chatPopup">
+  <div class="chat-header">Admin Online</div>
+  <div class="chat-body" id="chatBody">
+    <div class="msg">Halo 👋</div>
+    <div class="msg">Ada yang bisa dibantu?</div>
+    <div class="typing" id="typing">Admin sedang mengetik...</div>
+  </div>
+  <button class="chat-btn" onclick="wa()">Chat WhatsApp</button>
+</div>
+
 <script>
-function wa(){
-  window.open("https://wa.me/6285100886036?text=Halo saya mau pesan jasa Google Maps");
-}
-
-function topScroll(){
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
+function wa(){ window.open("https://wa.me/6285100886036?text=Halo saya mau pesan jasa Google Maps","_blank"); }
+function shopee(){ window.open("https://id.shp.ee/Vn43PQPq","_blank"); }
+function topScroll(){ window.scrollTo({top:0,behavior:"smooth"}); }
 function cari(){
   let input=document.getElementById("search").value.toLowerCase();
-  let card=document.querySelectorAll(".card");
-  card.forEach(c=>{
-    c.style.display=c.innerText.toLowerCase().includes(input)?"block":"none";
-  });
+  document.querySelectorAll(".card").forEach(c=>{ c.style.display=c.innerText.toLowerCase().includes(input)?"inline-block":"none"; });
 }
 
+// Slider testimoni fade
 let i=0;
 let slides=document.querySelectorAll(".slide");
 setInterval(()=>{
@@ -286,16 +345,16 @@ setInterval(()=>{
   i=(i+1)%slides.length;
 },3000);
 
+// Upload testimoni baru
 function upload(){
   let nama=document.getElementById("nama").value;
   let pesan=document.getElementById("pesan").value;
   let file=document.getElementById("foto").files[0];
+  if(!nama || !pesan){ alert("Isi nama & testimoni"); return; }
 
   let div=document.createElement("div");
   div.className="slide";
-
   let isi="⭐⭐⭐⭐⭐<br><b>"+nama+"</b><br>"+pesan;
-
   if(file){
     let img=document.createElement("img");
     img.src=URL.createObjectURL(file);
@@ -304,10 +363,19 @@ function upload(){
   }else{
     div.innerHTML=isi;
   }
-
   document.getElementById("slider").appendChild(div);
   slides=document.querySelectorAll(".slide");
 }
+
+// Chat popup
+function toggleChat(){
+  let chat=document.getElementById("chatPopup");
+  chat.style.display = chat.style.display === "block" ? "none":"block";
+}
+
+// Auto chat popup
+setTimeout(()=>{ document.getElementById("chatPopup").style.display="block"; },3000);
+setTimeout(()=>{ document.getElementById("typing").innerHTML="✔️ Online"; },5000);
 </script>
 
 </body>
