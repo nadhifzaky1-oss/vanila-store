@@ -103,6 +103,20 @@ body{
   opacity:0.8;
 }
 
+/* DESKRIPSI */
+.description{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  margin-top:20px;
+  text-align:left;
+  color:white;
+  max-width:600px;
+  margin-left:auto;
+  margin-right:auto;
+  line-height:1.6;
+}
+
 /* SEARCH */
 .search input{
   padding:10px;
@@ -196,10 +210,10 @@ body{
   z-index:1000;
 }
 
-/* CHAT POPUP */
+/* CHAT POPUP & BUTTON */
 #chatBox{
   position:fixed;
-  bottom:140px;
+  bottom:20px;
   left:20px;
   background:white;
   color:black;
@@ -211,9 +225,13 @@ body{
   transition:0.3s;
 }
 
+#chatBox:hover{
+  background:#e0e0e0;
+}
+
 #chatPopup{
   position:fixed;
-  bottom:180px;
+  bottom:60px;
   left:20px;
   width:220px;
   background:#e5ddd5;
@@ -222,6 +240,7 @@ body{
   box-shadow:0 10px 20px rgba(0,0,0,0.3);
   overflow:hidden;
   z-index:1000;
+  transition:0.3s;
 }
 
 .chat-header{
@@ -281,6 +300,50 @@ body{
 <div class="hero">
   <h2>Jasa Google Maps Profesional 🔥</h2>
   <button class="btn" onclick="wa()">Pesan Sekarang</button>
+
+  <!-- DESKRIPSI TAMBAHAN -->
+ <div class="hero">
+  <h2>Jasa Google Maps Profesional 🔥</h2>
+  <button class="btn" onclick="wa()">Pesan Sekarang</button>
+
+  <!-- DESKRIPSI TERBARU -->
+  <div class="hero">
+  <h2>Jasa Google Maps Profesional 🔥</h2>
+  <button class="btn" onclick="wa()">Pesan Sekarang</button>
+
+  <!-- DESKRIPSI DENGAN SPASI -->
+  <div class="description">
+    <h3>Solusi Praktis dan Aman untuk Profil Google Maps Bisnis Anda!</h3>
+    
+    <p>📍 <b>Mengapa Harus Menggunakan Google Maps untuk Bisnis?</b></p>
+    <ul style="margin-bottom:15px;">
+      <li style="margin-bottom:10px;">Promosi Lokal yang Efektif: Mempermudah pelanggan menemukan lokasi bisnis Anda dengan akurat.</li>
+      <li style="margin-bottom:10px;">Meningkatkan Kepercayaan: Profil di Google Maps membuat bisnis Anda lebih terpercaya di mata calon pelanggan.</li>
+      <li style="margin-bottom:10px;">Jangkauan Lebih Luas: Potensi muncul di pencarian Google dengan kata kunci yang relevan.</li>
+      <li style="margin-bottom:10px;">Gratis & Mudah Diakses: Media promosi tanpa biaya iklan besar.</li>
+    </ul>
+
+    <p style="margin-top:15px;">⚠️ <b>Kesulitan yang Sering Dihadapi:</b></p>
+    <ul style="margin-bottom:15px;">
+      <li style="margin-bottom:10px;">Akun sering ditangguhkan karena tidak sesuai standar Google.</li>
+    </ul>
+
+    <p style="margin-top:15px;"><b>Efek Negatif Penangguhan:</b></p>
+    <ul style="margin-bottom:15px;">
+      <li style="margin-bottom:10px;">Email dan nomor HP bisa di-ban dari Google Maps.</li>
+      <li style="margin-bottom:10px;">Menghambat promosi dan reputasi bisnis Anda.</li>
+    </ul>
+
+    <p style="margin-top:15px;">✅ <b>Solusi Terbaik: Gunakan Jasa Kami!</b></p>
+    <ul style="margin-bottom:15px;">
+      <li style="margin-bottom:10px;">Terbukti Berhasil: Ratusan profil bisnis sukses diverifikasi tanpa masalah.</li>
+      <li style="margin-bottom:10px;">Proses Cepat & Aman: Kami mengikuti standar Google dengan cermat.</li>
+      <li style="margin-bottom:10px;">Bayar Setelah Verified: Tidak perlu khawatir, pembayaran hanya setelah profil Anda aktif.</li>
+    </ul>
+
+    <p style="margin-top:15px;">👉 Jangan Tunda Lagi! Buat Bisnis Anda Mudah Ditemukan Sekarang!<br>
+    Hubungi <b>Master Maps Solution</b> dan jadikan profil Google Maps Anda lebih profesional!</p>
+  </div>
 </div>
 
 <div class="search">
@@ -316,7 +379,7 @@ body{
 <div class="shopee-float" onclick="shopee()">🛒</div>
 <div class="top" onclick="topScroll()">↑</div>
 
-<div id="chatBox" onclick="toggleChat()">Chat Admin</div>
+<div id="chatBox">💬 Chat Admin</div>
 <div id="chatPopup">
   <div class="chat-header">Admin Online</div>
   <div class="chat-body" id="chatBody">
@@ -367,11 +430,13 @@ function upload(){
   slides=document.querySelectorAll(".slide");
 }
 
-// Chat popup
+// Chat popup toggle
 function toggleChat(){
   let chat=document.getElementById("chatPopup");
   chat.style.display = chat.style.display === "block" ? "none":"block";
 }
+
+document.getElementById("chatBox").addEventListener("click", toggleChat);
 
 // Auto chat popup
 setTimeout(()=>{ document.getElementById("chatPopup").style.display="block"; },3000);
