@@ -2,225 +2,257 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-    <title>Super Phaser Bros - Landscape Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Mario Adventure - 10 Levels</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
     <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            background: #000; 
-            overflow: hidden; 
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body { margin: 0; background: #000; overflow: hidden; font-family: sans-serif; touch-action: none; user-select: none; }
+        #gui { position: absolute; top: 10px; left: 20px; color: white; text-shadow: 2px 2px #000; pointer-events: none; z-index: 10; font-size: 16px; }
+        
+        /* Layar Berhenti jika Portrait */
+        #portrait-stop { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+            color: white; z-index: 9999; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
         }
+        @media screen and (orientation: portrait) { #portrait-stop { display: flex; } }
 
-        /* Memaksa rotasi jika user membuka dalam mode portrait di HP */
-        @media screen and (orientation: portrait) {
-            #warning-message { display: block; }
-        }
-
-        #warning-message {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #222; color: white; z-index: 9999;
-            text-align: center; padding-top: 20%;
-        }
-
-        #ui-layer {
-            position: absolute; top: 10px; left: 20px; color: white;
-            text-shadow: 2px 2px #000; pointer-events: none; z-index: 10;
-            font-size: 18px; font-weight: bold;
-        }
-
-        .mobile-controls {
-            position: fixed; bottom: 20px; width: 100%; display: flex;
-            justify-content: space-between; padding: 0 40px; box-sizing: border-box;
-            z-index: 20;
-        }
-
-        .btn {
-            width: 70px; height: 70px; background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px; border: 2px solid rgba(255, 255, 255, 0.5); 
+        .controls { position: fixed; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 30px; box-sizing: border-box; z-index: 100; pointer-events: none; }
+        .btn { 
+            width: 75px; height: 75px; background: rgba(255, 255, 255, 0.2); 
+            border: 3px solid rgba(255, 255, 255, 0.5); border-radius: 15px; 
             display: flex; justify-content: center; align-items: center; 
-            font-size: 24px; color: white; user-select: none;
-            backdrop-filter: blur(5px);
+            font-size: 28px; color: white; pointer-events: auto;
         }
-
         .btn:active { background: rgba(255, 255, 255, 0.5); transform: scale(0.9); }
-        #jump-btn { width: 90px; height: 90px; border-radius: 50%; background: rgba(255, 0, 0, 0.3); }
+        #jump-btn { background: rgba(255, 71, 87, 0.5); border-radius: 50%; width: 90px; height: 90px; }
+        #shoot-btn { background: rgba(46, 213, 115, 0.5); border-radius: 50%; display: none; }
     </style>
 </head>
 <body>
 
-<div id="warning-message">
-    <h2>🔄 Harap Putar HP Anda ke Mode Landscape</h2>
+<div id="portrait-stop">
+    <h1>⏸️ GAME BERHENTI</h1>
+    <p>Harap putar layar ke Landscape untuk melanjutkan.</p>
 </div>
 
-<div id="ui-layer">
-    💰 SCORE: <span id="score">0</span> | 🚩 LVL: <span id="lvl">1</span>/10 | ❤️ LIFE: <span id="lives">3</span>
+<div id="gui">
+    🌟 SCORE: <span id="score">0</span> | ❤️ LIFE: <span id="lives">3</span> | 🚩 LVL: <span id="lvl">1</span>/10<br>
+    <span id="status" style="color: #ffff00; font-weight: bold;"></span>
 </div>
 
-<div class="mobile-controls">
-    <div style="display: flex; gap: 15px;">
-        <div class="btn" id="left-btn">⬅️</div>
-        <div class="btn" id="right-btn">➡️</div>
+<div class="controls">
+    <div style="display: flex; gap: 20px; pointer-events: auto;">
+        <div class="btn" id="left-btn">◀️</div>
+        <div class="btn" id="right-btn">▶️</div>
     </div>
-    <div class="btn" id="jump-btn">JUMP</div>
+    <div style="display: flex; gap: 20px; pointer-events: auto;">
+        <div class="btn" id="shoot-btn">🔥</div>
+        <div class="btn" id="jump-btn">UP</div>
+    </div>
 </div>
 
 <script>
-/**
- * KONFIGURASI GAME LANDSCAPE
- */
 const config = {
     type: Phaser.AUTO,
-    scale: {
-        mode: Phaser.Scale.FIT, // Menyesuaikan layar secara otomatis
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 800,
-        height: 450, // Rasio 16:9 yang ideal untuk landscape
-    },
-    physics: {
-        default: 'arcade',
-        arcade: { gravity: { y: 1200 }, debug: false }
-    },
+    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 850, height: 420 },
+    physics: { default: 'arcade', arcade: { gravity: { y: 1200 }, debug: false } },
     scene: { preload: preload, create: create, update: update }
 };
 
-let player, platforms, cursors, coins, enemies, goal;
-let score = 0, currentLevel = 1, lives = 3;
-let moveLeft = false, moveRight = false, isJumping = false;
+let player, platforms, luckyBlocks, enemies, bullets, goal;
+let score = 0, lives = 3, currentLevel = parseInt(localStorage.getItem('mario_lvl')) || 1;
+let ammo = 0, isBig = false, moveLeft = false, moveRight = false, isJumping = false;
 
 const game = new Phaser.Game(config);
 
 function preload() {
     this.load.image('sky', 'https://labs.phaser.io/assets/skies/bigsky.png');
-    this.load.spritesheet('mario', 'https://labs.phaser.io/assets/sprites/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('hero', 'https://labs.phaser.io/assets/sprites/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
+    this.load.image('fire', 'https://labs.phaser.io/assets/sprites/muzzleflash3.png');
+    
+    // Create Yellow Block Texture
+    let graphics = this.make.graphics();
+    graphics.fillStyle(0xffff00, 1);
+    graphics.fillRect(0, 0, 32, 32);
+    graphics.lineStyle(2, 0xffaa00, 1);
+    graphics.strokeRect(0, 0, 32, 32);
+    graphics.generateTexture('yellowBlock', 32, 32);
 }
 
 function create() {
-    // Background dibuat lebih lebar untuk scrolling
-    this.add.image(400, 225, 'sky').setScrollFactor(0.3).setScale(2);
-
+    const worldWidth = 5000;
+    let bg = this.add.image(425, 210, 'sky').setScrollFactor(0.2).setScale(2);
+    
     platforms = this.physics.add.staticGroup();
-    coins = this.physics.add.group();
+    luckyBlocks = this.physics.add.staticGroup();
     enemies = this.physics.add.group();
+    bullets = this.physics.add.group();
 
-    generateLevel(this, currentLevel);
+    // 1. TEMA LEVEL (1-10)
+    applyLevelTheme(currentLevel, bg, platforms);
 
-    player = this.physics.add.sprite(100, 300, 'mario');
-    player.setCollideWorldBounds(false);
-
-    // Animasi
-    this.anims.create({ key: 'left', frames: this.anims.generateFrameNumbers('mario', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
-    this.anims.create({ key: 'turn', frames: [ { key: 'mario', frame: 4 } ], frameRate: 20 });
-    this.anims.create({ key: 'right', frames: this.anims.generateFrameNumbers('mario', { start: 5, end: 8 }), frameRate: 10, repeat: -1 });
-
-    // Colliders
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(enemies, platforms);
-    this.physics.add.overlap(player, coins, (p, c) => { 
-        c.disableBody(true, true); 
-        score += 10; 
-        document.getElementById('score').innerText = score;
-    });
-    this.physics.add.collider(player, enemies, handleEnemyCollision, null, this);
-    this.physics.add.overlap(player, goal, nextLevel, null, this);
-
-    // Camera Landscape
-    this.cameras.main.setBounds(0, 0, 5000, 450);
-    this.physics.world.setBounds(0, 0, 5000, 500);
-    this.cameras.main.startFollow(player, true, 0.1, 0.1);
-
-    cursors = this.input.keyboard.createCursorKeys();
-    initMobileControls();
-}
-
-function generateLevel(scene, level) {
-    // Tanah bawah
+    // 2. LANTAI DASAR
     for (let i = 0; i < 20; i++) {
-        platforms.create(i * 300, 430, null).setDisplaySize(305, 40).setTint(0x4d2600).refreshBody();
+        platforms.create(i * 300, 410, 'ground').setScale(1.2).refreshBody();
     }
 
-    // Rintangan Acak
+    // 3. GENERATOR OBJEK (Platform hanya ada jika ada Lucky Block)
     for (let i = 1; i < 15; i++) {
-        let x = i * 350 + (Math.random() * 50);
-        let y = 320 - (Math.random() * 100);
-        platforms.create(x, y, null).setDisplaySize(120, 20).setTint(0x228b22).refreshBody();
-        coins.create(x, y - 40, null).setDisplaySize(20, 20).setTint(0xffff00);
+        let x = i * 320;
+        let y = 250;
+        
+        // Munculkan Lucky Block secara jarang (jarak jauh-jauh)
+        if (i % 3 === 0) {
+            // Buat Platform melayang tepat di bawah Lucky Block
+            platforms.create(x, y, 'ground').setScale(0.4).refreshBody();
+            let lb = luckyBlocks.create(x, y - 90, 'yellowBlock').refreshBody();
+            lb.activeItem = true;
+        }
 
-        if (level > 1 && i % 2 === 0) {
-            let e = enemies.create(x, y - 50, null).setDisplaySize(30, 30).setTint(0xff0000);
-            e.setVelocityX(-80 - (level * 10));
+        // Musuh muncul di tanah
+        if (i % 2 === 0) {
+            let en = enemies.create(x + 100, 350, 'hero', 0).setTint(0xff0000);
+            en.setVelocityX(-100).setBounce(1, 0).setCollideWorldBounds(true);
         }
     }
 
-    goal = scene.physics.add.staticSprite(4800, 350, null).setDisplaySize(30, 150).setTint(0xffffff);
+    // 4. AREA FINISH
+    const finishPos = worldWidth - 400;
+    goal = this.physics.add.staticSprite(finishPos, 305, 'ground').setDisplaySize(10, 210).setTint(0xffffff);
+    this.add.rectangle(finishPos + 40, 220, 80, 50, 0xff0000);
+    this.add.text(finishPos + 15, 212, 'FINISH', { fontSize: '18px', color: '#fff', fontStyle: 'bold' });
+
+    player = this.physics.add.sprite(150, 200, 'hero');
+    this.anims.create({ key: 'walk', frames: this.anims.generateFrameNumbers('hero', { start: 5, end: 8 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'idle', frames: [ { key: 'hero', frame: 4 } ], frameRate: 20 });
+
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(enemies, platforms);
+    this.physics.add.collider(player, luckyBlocks, handleLucky, null, this);
+    this.physics.add.collider(player, enemies, handleEnemy, null, this);
+    this.physics.add.overlap(player, goal, reachFinish, null, this);
+    this.physics.add.overlap(bullets, enemies, (b, e) => { b.destroy(); e.destroy(); score += 100; updateHUD(); });
+
+    this.cameras.main.setBounds(0, 0, worldWidth, 420);
+    this.physics.world.setBounds(0, 0, worldWidth, 480);
+    this.cameras.main.startFollow(player, true, 0.1, 0.1);
+
+    initControls(this);
+}
+
+function applyLevelTheme(lvl, bg, platGroup) {
+    const themes = [
+        { sky: 0x87CEEB, ground: 0x228B22 }, // 1. Grass
+        { sky: 0xFF8C00, ground: 0xEDC9AF }, // 2. Desert
+        { sky: 0x2F4F4F, ground: 0x556B2F }, // 3. Forest
+        { sky: 0x000033, ground: 0x444444 }, // 4. Night
+        { sky: 0x800080, ground: 0x330033 }, // 5. Poison
+        { sky: 0xFFFFFF, ground: 0xADD8E6 }, // 6. Ice
+        { sky: 0x000000, ground: 0x8B0000 }, // 7. Volcano
+        { sky: 0x4682B4, ground: 0x708090 }, // 8. Rain
+        { sky: 0xFFD700, ground: 0x8B4513 }, // 9. Golden
+        { sky: 0x111111, ground: 0x222222 }  // 10. Castle
+    ];
+    let t = themes[(lvl - 1) % 10];
+    bg.setTint(t.sky);
+    // Tint ground color later in creation or via a global var
+}
+
+function handleLucky(p, lb) {
+    if (p.body.touching.up && lb.activeItem) {
+        lb.activeItem = false;
+        lb.setTint(0x444444);
+        p.setVelocityY(200);
+        let rand = Math.random();
+        if (rand < 0.35) {
+            ammo = 5; document.getElementById('shoot-btn').style.display = 'flex';
+            updateStatus("DAPAT 5 PELURU!");
+        } else if (rand < 0.7) {
+            startBig(this);
+        } else {
+            score += 500; updateStatus("SKOR +500!");
+        }
+        updateHUD();
+    }
+}
+
+function startBig(scene) {
+    if (isBig) return;
+    isBig = true; player.setScale(1.6); player.setTint(0x00ff00);
+    updateStatus("MODE RAKSASA (10S)");
+    scene.time.addEvent({ delay: 10000, callback: () => { isBig = false; player.setScale(1); player.clearTint(); updateStatus(""); } });
+}
+
+function handleEnemy(p, en) {
+    if (p.body.touching.down && en.body.touching.up) {
+        en.destroy(); p.setVelocityY(-450); score += 100; updateHUD();
+    } else {
+        lives--; updateHUD();
+        if (lives <= 0) { alert("GAME OVER!"); location.reload(); }
+        else { p.setX(p.x - 100); p.setY(200); }
+    }
+}
+
+function shootBullet(scene) {
+    if (ammo <= 0) return;
+    ammo--;
+    let b = bullets.create(player.x, player.y, 'fire').setScale(0.6);
+    b.setVelocityX(player.flipX ? -500 : 500);
+    b.body.allowGravity = false;
+    updateStatus("PELURU: " + ammo);
+    if (ammo <= 0) document.getElementById('shoot-btn').style.display = 'none';
+}
+
+function reachFinish() {
+    if (currentLevel >= 10) {
+        alert("SELAMAT! KAMU TAMAT!");
+        currentLevel = 1;
+    } else {
+        alert("LEVEL " + currentLevel + " CLEAR!");
+        currentLevel++;
+    }
+    localStorage.setItem('mario_lvl', currentLevel);
+    location.reload();
 }
 
 function update() {
-    if (cursors.left.isDown || moveLeft) {
-        player.setVelocityX(-200);
-        player.anims.play('left', true);
-    } else if (cursors.right.isDown || moveRight) {
-        player.setVelocityX(200);
-        player.anims.play('right', true);
+    // Check orientation
+    if (this.scale.orientation === Phaser.Scale.PORTRAIT) {
+        this.scene.pause();
+        return;
     } else {
-        player.setVelocityX(0);
-        player.anims.play('turn');
+        this.scene.resume();
     }
 
-    if ((cursors.up.isDown || isJumping) && player.body.touching.down) {
-        player.setVelocityY(-600);
-    }
+    if (moveLeft) { player.setVelocityX(-230); player.anims.play('walk', true); player.flipX = true; }
+    else if (moveRight) { player.setVelocityX(230); player.anims.play('walk', true); player.flipX = false; }
+    else { player.setVelocityX(0); player.anims.play('idle'); }
 
-    enemies.children.iterate(e => {
-        if (e && e.body.blocked.left) e.setVelocityX(100);
-        if (e && e.body.blocked.right) e.setVelocityX(-100);
-    });
-
-    if (player.y > 500) restartPos();
+    if (isJumping && player.body.touching.down) player.setVelocityY(-600);
+    if (player.y > 480) { lives--; updateHUD(); player.setX(100); player.setY(200); }
 }
 
-function handleEnemyCollision(p, e) {
-    if (p.body.touching.down && e.body.touching.up) {
-        e.disableBody(true, true);
-        p.setVelocityY(-400);
-        score += 50;
-        document.getElementById('score').innerText = score;
-    } else {
-        lives--;
-        document.getElementById('lives').innerText = lives;
-        if (lives <= 0) { alert("GAME OVER!"); location.reload(); }
-        else restartPos();
-    }
+function updateHUD() {
+    document.getElementById('score').innerText = score;
+    document.getElementById('lives').innerText = lives;
+    document.getElementById('lvl').innerText = currentLevel;
 }
 
-function nextLevel() {
-    if (currentLevel < 10) {
-        currentLevel++;
-        alert("Level " + currentLevel);
-        document.getElementById('lvl').innerText = currentLevel;
-        this.scene.restart();
-    } else {
-        alert("YOU WIN!"); location.reload();
-    }
-}
+function updateStatus(msg) { document.getElementById('status').innerText = msg; }
 
-function restartPos() { player.setX(100); player.setY(300); }
-
-function initMobileControls() {
-    document.getElementById('left-btn').ontouchstart = () => moveLeft = true;
-    document.getElementById('left-btn').ontouchend = () => moveLeft = false;
-    document.getElementById('right-btn').ontouchstart = () => moveRight = true;
-    document.getElementById('right-btn').ontouchend = () => moveRight = false;
-    document.getElementById('jump-btn').ontouchstart = () => isJumping = true;
-    document.getElementById('jump-btn').ontouchend = () => isJumping = false;
+function initControls(scene) {
+    const setup = (id, startFn, endFn) => {
+        const el = document.getElementById(id);
+        el.addEventListener('pointerdown', (e) => { e.preventDefault(); startFn(); });
+        el.addEventListener('pointerup', (e) => { e.preventDefault(); endFn(); });
+        el.addEventListener('pointerout', (e) => { e.preventDefault(); endFn(); });
+    };
+    setup('left-btn', () => moveLeft = true, () => moveLeft = false);
+    setup('right-btn', () => moveRight = true, () => moveRight = false);
+    setup('jump-btn', () => isJumping = true, () => isJumping = false);
+    document.getElementById('shoot-btn').addEventListener('pointerdown', (e) => { e.preventDefault(); shootBullet(scene); });
 }
 </script>
 </body>
