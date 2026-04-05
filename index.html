@@ -1,218 +1,227 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Klaim THR</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
+    <title>Super Phaser Bros - Landscape Mode</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #000; 
+            overflow: hidden; 
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-<style>
-/* 🔒 LOCK SCROLL TANPA RUSAK KLIK */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
+        /* Memaksa rotasi jika user membuka dalam mode portrait di HP */
+        @media screen and (orientation: portrait) {
+            #warning-message { display: block; }
+        }
 
-body {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  font-family: Arial;
-  background: #0f172a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
+        #warning-message {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #222; color: white; z-index: 9999;
+            text-align: center; padding-top: 20%;
+        }
 
-* {
-  overscroll-behavior: none;
-}
+        #ui-layer {
+            position: absolute; top: 10px; left: 20px; color: white;
+            text-shadow: 2px 2px #000; pointer-events: none; z-index: 10;
+            font-size: 18px; font-weight: bold;
+        }
 
-/* GETAR */
-.shake {
-  animation: shake 0.3s;
-}
-@keyframes shake {
-  0% { transform: translate(2px, 2px); }
-  25% { transform: translate(-2px, -2px); }
-  50% { transform: translate(2px, -2px); }
-  75% { transform: translate(-2px, 2px); }
-  100% { transform: translate(0, 0); }
-}
+        .mobile-controls {
+            position: fixed; bottom: 20px; width: 100%; display: flex;
+            justify-content: space-between; padding: 0 40px; box-sizing: border-box;
+            z-index: 20;
+        }
 
-/* NOTIF */
-.notif {
-  position: fixed;
-  top: -150px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #108ee9;
-  color: white;
-  padding: 22px 20px;
-  border-radius: 16px;
-  width: 92%;
-  max-width: 380px;
-  transition: 0.4s;
-  line-height: 1.6;
-  font-size: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-.notif.show { top: 20px; }
+        .btn {
+            width: 70px; height: 70px; background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px; border: 2px solid rgba(255, 255, 255, 0.5); 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 24px; color: white; user-select: none;
+            backdrop-filter: blur(5px);
+        }
 
-/* CARD */
-.card {
-  background: #020617;
-  padding: 35px;
-  border-radius: 20px;
-  text-align: center;
-  width: 320px;
-}
-.card h2 {
-  font-size: 22px;
-}
-
-button {
-  margin-top: 15px;
-  padding: 14px;
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  background: #108ee9;
-  color: white;
-  font-weight: bold;
-  font-size: 15px;
-}
-
-/* POPUP */
-.popup {
-  display: none;
-  position: fixed;
-  bottom: -300px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  width: 92%;
-  max-width: 380px;
-  border-radius: 20px 20px 0 0;
-  padding: 20px;
-  text-align: center;
-  transition: 0.4s;
-  color: black;
-}
-.popup.show { bottom: 0; }
-
-/* UANG */
-.item {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  font-size: 26px;
-  pointer-events: none;
-  animation: explode 3s ease-out forwards;
-}
-
-@keyframes explode {
-  0% {
-    transform: translate(0,0) scale(0.5);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--x), var(--y)) rotate(1080deg) scale(1.2);
-    opacity: 0;
-  }
-}
-</style>
+        .btn:active { background: rgba(255, 255, 255, 0.5); transform: scale(0.9); }
+        #jump-btn { width: 90px; height: 90px; border-radius: 50%; background: rgba(255, 0, 0, 0.3); }
+    </style>
 </head>
-
 <body>
 
-<!-- NOTIF -->
-<div id="notif" class="notif">
-  <div style="font-size:13px; opacity:0.9;">DANA</div>
-  <div style="font-size:16px; font-weight:bold;">Saldo Masuk</div>
-  <div style="font-size:14px; margin-top:4px;">
-    Hi, Z***y baru saja kirim DANA ke kamu 1.000.000
-  </div>
+<div id="warning-message">
+    <h2>🔄 Harap Putar HP Anda ke Mode Landscape</h2>
 </div>
 
-<!-- CARD -->
-<div class="card">
-  <div style="font-size:45px;">💸</div>
-  <h2>Klaim THRmu!</h2>
-  <button onclick="start()">KLAIM SEKARANG</button>
+<div id="ui-layer">
+    💰 SCORE: <span id="score">0</span> | 🚩 LVL: <span id="lvl">1</span>/10 | ❤️ LIFE: <span id="lives">3</span>
 </div>
 
-<!-- POPUP -->
-<div id="popup" class="popup">
-  <h3>💰 Konfirmasi</h3>
-  <p>Saldo berhasil masuk ke akun Anda</p>
-  <button onclick="done()">OK</button>
+<div class="mobile-controls">
+    <div style="display: flex; gap: 15px;">
+        <div class="btn" id="left-btn">⬅️</div>
+        <div class="btn" id="right-btn">➡️</div>
+    </div>
+    <div class="btn" id="jump-btn">JUMP</div>
 </div>
 
 <script>
-// 🔊 SUARA
-function sound() {
-  let audio = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
-  audio.play();
+/**
+ * KONFIGURASI GAME LANDSCAPE
+ */
+const config = {
+    type: Phaser.AUTO,
+    scale: {
+        mode: Phaser.Scale.FIT, // Menyesuaikan layar secara otomatis
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 800,
+        height: 450, // Rasio 16:9 yang ideal untuk landscape
+    },
+    physics: {
+        default: 'arcade',
+        arcade: { gravity: { y: 1200 }, debug: false }
+    },
+    scene: { preload: preload, create: create, update: update }
+};
+
+let player, platforms, cursors, coins, enemies, goal;
+let score = 0, currentLevel = 1, lives = 3;
+let moveLeft = false, moveRight = false, isJumping = false;
+
+const game = new Phaser.Game(config);
+
+function preload() {
+    this.load.image('sky', 'https://labs.phaser.io/assets/skies/bigsky.png');
+    this.load.spritesheet('mario', 'https://labs.phaser.io/assets/sprites/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
-// 📳 GETAR
-function vibrate() {
-  if (navigator.vibrate) {
-    navigator.vibrate([200,100,200]);
-  }
+function create() {
+    // Background dibuat lebih lebar untuk scrolling
+    this.add.image(400, 225, 'sky').setScrollFactor(0.3).setScale(2);
+
+    platforms = this.physics.add.staticGroup();
+    coins = this.physics.add.group();
+    enemies = this.physics.add.group();
+
+    generateLevel(this, currentLevel);
+
+    player = this.physics.add.sprite(100, 300, 'mario');
+    player.setCollideWorldBounds(false);
+
+    // Animasi
+    this.anims.create({ key: 'left', frames: this.anims.generateFrameNumbers('mario', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'turn', frames: [ { key: 'mario', frame: 4 } ], frameRate: 20 });
+    this.anims.create({ key: 'right', frames: this.anims.generateFrameNumbers('mario', { start: 5, end: 8 }), frameRate: 10, repeat: -1 });
+
+    // Colliders
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(enemies, platforms);
+    this.physics.add.overlap(player, coins, (p, c) => { 
+        c.disableBody(true, true); 
+        score += 10; 
+        document.getElementById('score').innerText = score;
+    });
+    this.physics.add.collider(player, enemies, handleEnemyCollision, null, this);
+    this.physics.add.overlap(player, goal, nextLevel, null, this);
+
+    // Camera Landscape
+    this.cameras.main.setBounds(0, 0, 5000, 450);
+    this.physics.world.setBounds(0, 0, 5000, 500);
+    this.cameras.main.startFollow(player, true, 0.1, 0.1);
+
+    cursors = this.input.keyboard.createCursorKeys();
+    initMobileControls();
 }
 
-// 💸 UANG
-function chaos() {
-  let emojis = ["💸","💵","💶","💴","💷","✨"];
+function generateLevel(scene, level) {
+    // Tanah bawah
+    for (let i = 0; i < 20; i++) {
+        platforms.create(i * 300, 430, null).setDisplaySize(305, 40).setTint(0x4d2600).refreshBody();
+    }
 
-  for (let i = 0; i < 300; i++) {
-    let el = document.createElement("div");
-    el.className = "item";
-    el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+    // Rintangan Acak
+    for (let i = 1; i < 15; i++) {
+        let x = i * 350 + (Math.random() * 50);
+        let y = 320 - (Math.random() * 100);
+        platforms.create(x, y, null).setDisplaySize(120, 20).setTint(0x228b22).refreshBody();
+        coins.create(x, y - 40, null).setDisplaySize(20, 20).setTint(0xffff00);
 
-    let x = (Math.random() - 0.5) * 2000;
-    let y = (Math.random() - 0.5) * 2000;
+        if (level > 1 && i % 2 === 0) {
+            let e = enemies.create(x, y - 50, null).setDisplaySize(30, 30).setTint(0xff0000);
+            e.setVelocityX(-80 - (level * 10));
+        }
+    }
 
-    el.style.setProperty("--x", x + "px");
-    el.style.setProperty("--y", y + "px");
-
-    document.body.appendChild(el);
-
-    setTimeout(() => el.remove(), 3000);
-  }
+    goal = scene.physics.add.staticSprite(4800, 350, null).setDisplaySize(30, 150).setTint(0xffffff);
 }
 
-// 🚀 START
-function start() {
-  let notif = document.getElementById("notif");
-  let popup = document.getElementById("popup");
+function update() {
+    if (cursors.left.isDown || moveLeft) {
+        player.setVelocityX(-200);
+        player.anims.play('left', true);
+    } else if (cursors.right.isDown || moveRight) {
+        player.setVelocityX(200);
+        player.anims.play('right', true);
+    } else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
 
-  chaos();
-  sound();
-  vibrate();
+    if ((cursors.up.isDown || isJumping) && player.body.touching.down) {
+        player.setVelocityY(-600);
+    }
 
-  document.body.classList.add("shake");
-  setTimeout(() => document.body.classList.remove("shake"), 300);
+    enemies.children.iterate(e => {
+        if (e && e.body.blocked.left) e.setVelocityX(100);
+        if (e && e.body.blocked.right) e.setVelocityX(-100);
+    });
 
-  setTimeout(() => {
-    notif.classList.add("show");
-  }, 700);
-
-  setTimeout(() => {
-    notif.classList.remove("show");
-    popup.classList.add("show");
-  }, 4000);
+    if (player.y > 500) restartPos();
 }
 
-// 😈 END
-function done() {
-  alert("😆 SULTAN PALSU! KENA PRANK!! 😆");
+function handleEnemyCollision(p, e) {
+    if (p.body.touching.down && e.body.touching.up) {
+        e.disableBody(true, true);
+        p.setVelocityY(-400);
+        score += 50;
+        document.getElementById('score').innerText = score;
+    } else {
+        lives--;
+        document.getElementById('lives').innerText = lives;
+        if (lives <= 0) { alert("GAME OVER!"); location.reload(); }
+        else restartPos();
+    }
+}
+
+function nextLevel() {
+    if (currentLevel < 10) {
+        currentLevel++;
+        alert("Level " + currentLevel);
+        document.getElementById('lvl').innerText = currentLevel;
+        this.scene.restart();
+    } else {
+        alert("YOU WIN!"); location.reload();
+    }
+}
+
+function restartPos() { player.setX(100); player.setY(300); }
+
+function initMobileControls() {
+    document.getElementById('left-btn').ontouchstart = () => moveLeft = true;
+    document.getElementById('left-btn').ontouchend = () => moveLeft = false;
+    document.getElementById('right-btn').ontouchstart = () => moveRight = true;
+    document.getElementById('right-btn').ontouchend = () => moveRight = false;
+    document.getElementById('jump-btn').ontouchstart = () => isJumping = true;
+    document.getElementById('jump-btn').ontouchend = () => isJumping = false;
 }
 </script>
-
 </body>
 </html>
